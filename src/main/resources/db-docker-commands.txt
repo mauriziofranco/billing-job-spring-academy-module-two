@@ -1,0 +1,43 @@
+docker image pull postgres:14.1-alpine
+
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 postgres:14.1-alpine
+
+docker exec -it postgres psql -U postgres
+
+
+docker exec postgres psql -U postgres -c 'select * from BATCH_JOB_EXECUTION;'
+
+
+/mnt/exercises/src/sql/schema-drop-postgresql.sql 
+
+
+./mvnw package -Dmaven.test.skip=true
+
+java -jar target/billing-job-0.0.1-SNAPSHOT.jar input.file=src/main/resources/billing-2023-01.csv
+
+docker exec postgres psql -U postgres -c 'select * from BATCH_JOB_INSTANCE;'
+
+docker exec postgres psql -U postgres -c 'select * from BATCH_JOB_EXECUTION;'
+
+docker exec postgres psql -U postgres -c 'select * from BATCH_JOB_EXECUTION_PARAMS;'
+
+java -jar target/billing-job-0.0.1-SNAPSHOT.jar input.file=src/main/resources/billing-2023-02.csv
+
+docker exec postgres psql -U postgres -c 'select * from BATCH_JOB_EXECUTION_PARAMS;'
+
+java -jar target/billing-job-0.0.1-SNAPSHOT.jar input.file=src/main/resources/billing-2023-03.csv
+
+docker cp /home/maurizio/git/billing-job-spring-academy-module-two/src/main/resources/docker-db-tables-and-sequence-create-postgree.sql postgres:docker-db-tables-and-sequence-create-postgree.sql
+docker cp /home/maurizio/git/billing-job-spring-academy-module-two/src/main/resources/docker-db-tables-and-sequence-drop-postgree.sql postgres:docker-db-tables-and-sequence-drop-postgree.sql
+docker cp /home/maurizio/git/billing-job-spring-academy-module-two/src/main/resources/schema-billing.sql postgres:schema-billing.sql
+
+
+docker exec postgres psql -f docker-db-schema-drop-postgree.sql -U postgres
+
+docker exec postgres psql -U postgres -c 'select count(*) from BILLING_DATA;'
+
+
+
+
+
+

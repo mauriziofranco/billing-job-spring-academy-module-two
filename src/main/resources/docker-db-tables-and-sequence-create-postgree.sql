@@ -1,11 +1,4 @@
-docker image pull postgres:14.1-alpine
-
-docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 postgres:14.1-alpine
-
-docker exec -it postgres psql -U postgres
-
-
- CREATE TABLE BATCH_JOB_INSTANCE  (
+CREATE TABLE BATCH_JOB_INSTANCE  (
      JOB_INSTANCE_ID BIGINT  NOT NULL PRIMARY KEY ,
      VERSION BIGINT ,
      JOB_NAME VARCHAR(100) NOT NULL,
@@ -84,28 +77,16 @@ CREATE SEQUENCE BATCH_JOB_EXECUTION_SEQ MAXVALUE 9223372036854775807 NO CYCLE;
 
 CREATE SEQUENCE BATCH_JOB_SEQ MAXVALUE 9223372036854775807 NO CYCLE;
 
-
-docker exec postgres psql -U postgres -c 'select * from BATCH_JOB_EXECUTION;'
-
-
-/mnt/exercises/src/sql/schema-drop-postgresql.sql 
-
-
-./mvnw package -Dmaven.test.skip=true
-
-java -jar target/billing-job-0.0.1-SNAPSHOT.jar input.file=src/main/resources/billing-2023-01.csv
-
-docker exec postgres psql -U postgres -c 'select * from BATCH_JOB_INSTANCE;'
-
-docker exec postgres psql -U postgres -c 'select * from BATCH_JOB_EXECUTION;'
-
-docker exec postgres psql -U postgres -c 'select * from BATCH_JOB_EXECUTION_PARAMS;'
-
-java -jar target/billing-job-0.0.1-SNAPSHOT.jar input.file=src/main/resources/billing-2023-02.csv
-
-docker exec postgres psql -U postgres -c 'select * from BATCH_JOB_EXECUTION_PARAMS;'
-
-
+create table BILLING_DATA
+(
+    DATA_YEAR     INTEGER,
+    DATA_MONTH    INTEGER,
+    ACCOUNT_ID    INTEGER,
+    PHONE_NUMBER  VARCHAR(12),
+    DATA_USAGE    FLOAT,
+    CALL_DURATION INTEGER,
+    SMS_COUNT     INTEGER
+);
 
 
 
